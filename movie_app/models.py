@@ -13,13 +13,13 @@ class Movie(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(translit(self.name, 'ru', reversed=True))
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_url(self):
         return reverse('movie-detail', args=[self.slug])
 
     def __str__(self):
-        return f'{self.name} - {self.rating}%)'
+        return f'{self.name} - {self.rating}%'
 
     class Meta:
         indexes = [
