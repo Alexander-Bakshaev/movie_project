@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 import debug_toolbar
 
+admin.AdminSite.site_header = 'Наша админка'
+admin.site.index_title = 'Админка'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('movie_app.urls')),

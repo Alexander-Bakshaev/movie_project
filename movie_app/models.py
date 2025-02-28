@@ -2,12 +2,24 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from transliterate import translit
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 class Movie(models.Model):
-    name = models.CharField(max_length=50)
-    rating = models.IntegerField()
-    year = models.IntegerField(null=True)
-    budget = models.IntegerField(default=1000000)
+    EUR = 'EUR'
+    USD = 'USD'
+    RUB = 'RUB'
+    CURRENCY_CHOICES = [
+        (EUR, 'Euro'),
+        (USD, 'Dollar'),
+        (RUB, 'Rubles'),
+    ]
+
+    name = models.CharField(max_length=50, verbose_name='Название')
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)], verbose_name='Рейтинг')
+    year = models.IntegerField(null=True, blank=True)
+    budget = models.IntegerField(default=1000000, blank=True, validators=[MinValueValidator(1)], verbose_name='Бюджет')
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default=RUB, verbose_name='Валюта')
     slug = models.SlugField(default='', null=False, db_index=True)
 
     def save(self, *args, **kwargs):
@@ -26,6 +38,5 @@ class Movie(models.Model):
             models.Index(fields=['name']),
             models.Index(fields=['slug'], name='slug_idx'),
         ]
-
 
 # from movie_app.models import Movie
